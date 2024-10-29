@@ -13,6 +13,7 @@
 		(var planeNameIDS:str = "ownSquadronEntity ? ownSquadronEntity.plane.planeNameIDS : ''")
 		(var levelRome:str = "ownSquadronEntity ? ownSquadronEntity.plane.levelRome : ''")
 		(var ammoType:number = "ownSquadronEntity ? ownSquadronEntity.plane.ammoType : 0")
+		(var customUIPostfix:str = "ownSquadronEntity ? ownSquadronEntity.plane.customUIPostfix : ''")
 		(var aircraftCol:gfx = "$datahub.getCollection(CC.aircraft)")
 		(var subColName:str = "ownSquadronEntity ? 'bySquadron.'+ ownSquadronEntity.squadron.id : '0'" (event "aircarrier.evStateChanged"))
 		(var hpCollection:gfx = "ownSquadronEntity ? aircraftCol.getChildByPath(subColName) : null" (event "aircraftCol.evAdded") (event "aircraftCol.evRemoved"))
@@ -23,24 +24,27 @@
 		(var healthPointWidth:number = "ceil((AircraftHealthbarSettings.TOTAL_BAR_WIDTH - AircraftHealthbarSettings.HP_ATTACKER_PADDING * notchesNum)/max(1, maxPlanes))")
 
 		
-		(var planeIconSettings:array = "ammoType == SC.Common.PLANE_AMMO_TYPES.PROJECTILE			? ['bitmap:plane_fighter_own_bg', 19px, 19px, -4px] :
-										ammoType == SC.Common.PLANE_AMMO_TYPES.PROJECTILE_AP		? ['bitmap:plane_fighter_own_AP', 19px, 19px, -4px] :
-										ammoType == SC.Common.PLANE_AMMO_TYPES.BOMB_HE				? ['bitmap:plane_bomber_own', 9px, 21px, -5px] :
-										ammoType == SC.Common.PLANE_AMMO_TYPES.BOMB_AP				? ['bitmap:plane_bomber_own_AP', 9px, 21px, -5px] :
-										ammoType == SC.Common.PLANE_AMMO_TYPES.TORPEDO				? ['bitmap:plane_torpedo_own', 15px, 21px, -5px] :
-										ammoType == SC.Common.PLANE_AMMO_TYPES.TORPEDO_DEEPWATER	? ['bitmap:plane_torpedo_own_deepwater', 19px, 21px, -5px] :
-										ammoType == SC.Common.PLANE_AMMO_TYPES.SKIP_BOMB_HE			? ['bitmap:plane_skip_own', 19px, 21px, -4px] :
-										ammoType == SC.Common.PLANE_AMMO_TYPES.SKIP_BOMB_AP			? ['bitmap:plane_skip_own', 19px, 21px, -4px]
-																									: ['', 0px, 0px, 0px]")
+		(var planeIconByType:str =		"ammoType == SC.Common.PLANE_AMMO_TYPES.PROJECTILE			? 'fighter_he' :
+										ammoType == SC.Common.PLANE_AMMO_TYPES.PROJECTILE_AP		? 'fighter_ap' :
+										ammoType == SC.Common.PLANE_AMMO_TYPES.BOMB_HE				? 'bomber_he' :
+										ammoType == SC.Common.PLANE_AMMO_TYPES.BOMB_AP				? 'bomber_ap' :
+										ammoType == SC.Common.PLANE_AMMO_TYPES.TORPEDO				? 'torpedo_regular' :
+										ammoType == SC.Common.PLANE_AMMO_TYPES.TORPEDO_DEEPWATER	? 'torpedo_deepwater' :
+										ammoType == SC.Common.PLANE_AMMO_TYPES.SKIP_BOMB_HE			? 'skip_he' :
+										ammoType == SC.Common.PLANE_AMMO_TYPES.SKIP_BOMB_AP			? 'skip_ap'
+																									: ''")
+		(var planeIconName:str =		"'url:../battle_hud/markers/plane/controllable/' + planeIconByType + customUIPostfix + '_own.png'")
 	)
 	(style
-		#<edit
-		#(bottom = 128px)
+		# Mod
+		# (bottom = 128px)
 		(bottom = 35%)
+		#
 		(position = "absolute")
+		# Mod
 		(left = 50.3%)
+		#
 		(marginLeft = "-AircraftHealthbarSettings.TOTAL_BAR_WIDTH/2")
-		#edit>
 	)
 
 	(controller $Animation
@@ -111,16 +115,16 @@
 			(style
 				(marginLeft = 1px)
 				(marginRight = "S")
-				(bind width "planeIconSettings[1]")
-				(bind height "planeIconSettings[2]")
-				(bind marginTop "planeIconSettings[3]")
-				(bind backgroundImage "planeIconSettings[0]")
+				(width = 21px)
+				(height = 21px)
+				(marginTop = "-XS")
+				(bind backgroundImage "planeIconName")
 			)
 		)
 
 		
 		(tf
-			(style (width = 200px) (multiline = "false") (elideMode = true))
+			(style (width = 200px) (elideMode = true))
 			(class $TextDefaultBoldNM)
 			(bind text "levelRome + ' ' + planeNameIDS")
 		)
